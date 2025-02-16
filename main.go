@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/Kezume/finance-notes/database"
@@ -9,6 +10,12 @@ import (
 )
 
 func main() {
+	defer func()  {
+		if r := recover(); r != nil {
+			fmt.Println("Sistem masih dalam perbaikan")
+		}
+	}()
+	
 	database.DBConnect()
 	migration.RunMigration()
 
