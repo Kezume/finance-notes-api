@@ -10,9 +10,28 @@ import (
 type TransactionServiceImpl struct {
 	repo repositories.TransactionRepository
 }
-
 func NewTransactionService(repo repositories.TransactionRepository) TransactionService {
 	return &TransactionServiceImpl{repo: repo}
+}
+
+// GetAllTransaction implements TransactionService.
+func (t *TransactionServiceImpl) GetAllTransaction() ([]models.TransactionResponse, error) {
+	transaction, err := t.repo.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	var response []models.TransactionResponse
+	for _, t := range transaction {
+		response = append(response, models.TransactionResponse{
+			ID: uint(t.ID),
+			Title: t.Title,
+			Amount: t.Amount,
+			Type: t.Type,
+		})
+	}
+
+	return response, nil
 }
 
 // CreateTransaction implements TransactionService.
@@ -22,9 +41,9 @@ func (t *TransactionServiceImpl) CreateTransaction(request models.TransactionReq
 	}
 
 	transaction := models.Transaction{
-		Title: request.Title,
+		Title:  request.Title,
 		Amount: request.Amount,
-		Type: request.Type,
+		Type:   request.Type,
 	}
 
 	err := t.repo.Create(&transaction)
@@ -33,12 +52,11 @@ func (t *TransactionServiceImpl) CreateTransaction(request models.TransactionReq
 	}
 
 	response := models.TransactionResponse{
-		ID: uint(transaction.ID),
-		Title: transaction.Title,
+		ID:     uint(transaction.ID),
+		Title:  transaction.Title,
 		Amount: transaction.Amount,
-		Type: transaction.Type,
+		Type:   transaction.Type,
 	}
 
 	return &response, nil
 }
-
