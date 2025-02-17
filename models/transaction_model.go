@@ -14,7 +14,7 @@ type Transaction struct {
 type TransactionRequest struct {
 	Title  string  `json:"title" validate:"required"`
 	Amount float64 `json:"amount" validate:"required,gt=0"`
-	Type   string  `json:"type" validate:"required,oneof=income expense"`
+	Type   string  `json:"type" validate:"required,oneof=income expense another"`
 }
 
 type TransactionResponse struct {
