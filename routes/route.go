@@ -19,4 +19,5 @@ func RouteInit(app *fiber.App) {
 
 	// routes
 	app.Post("/api/transaction", transactionController.CreateTransaction)
+	app.Get("/api/transactions", transactionController.GetAllTransaction)
 }
