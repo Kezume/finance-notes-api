@@ -3,8 +3,8 @@ package controllers
 import (
 	"github.com/Kezume/finance-notes/models"
 	"github.com/Kezume/finance-notes/services"
-	"github.com/gofiber/fiber/v2"
 	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 )
 
 type TransactionControllerImpl struct {
@@ -13,6 +13,22 @@ type TransactionControllerImpl struct {
 
 func NewTransactionController(service services.TransactionService) TransactionController {
 	return &TransactionControllerImpl{service: service}
+}
+
+// GetAllTransaction implements TransactionController.
+func (t *TransactionControllerImpl) GetAllTransaction(ctx *fiber.Ctx) error {
+	transaction, err := t.service.GetAllTransaction()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to get transactions",
+			"details": err.Error(),
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Success get transactions",
+		"data": transaction,
+	})
 }
 
 // CreateTransaction implements TransactionController.
@@ -29,7 +45,7 @@ func (t *TransactionControllerImpl) CreateTransaction(ctx *fiber.Ctx) error {
 	if err != nil {
 		errors := make([]string, 0)
 		for _, err := range err.(validator.ValidationErrors) {
-			errors = append(errors, err.Field()+ " is "+err.Tag())
+			errors = append(errors, err.Field()+" is "+err.Tag())
 		}
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": errors,
@@ -39,14 +55,13 @@ func (t *TransactionControllerImpl) CreateTransaction(ctx *fiber.Ctx) error {
 	transaction, err := t.service.CreateTransaction(request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Failed to create transaction",
+			"error":   "Failed to create transaction",
 			"details": err.Error(),
 		})
 	}
 
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"message": "data success created",
-		"data": transaction,
+		"data":    transaction,
 	})
 }
-
