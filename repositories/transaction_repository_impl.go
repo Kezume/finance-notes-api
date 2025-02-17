@@ -14,8 +14,8 @@ func NewTransactionRepository() TransactionRepository {
 }
 
 // GetAll implements TransactionRepository.
-func (t *TransacationRepositoryImpl) GetAll() ([]models.TransactionResponse, error) {
-	var transaction []models.TransactionResponse
+func (t *TransacationRepositoryImpl) GetAll() ([]models.Transaction, error) {
+	var transaction []models.Transaction
 	err := database.DB.Find(&transaction).Error
 	if err != nil {
 		return nil, err
