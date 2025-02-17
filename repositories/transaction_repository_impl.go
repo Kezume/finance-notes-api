@@ -13,6 +13,18 @@ func NewTransactionRepository() TransactionRepository {
 	return &TransacationRepositoryImpl{}
 }
 
+// GetAll implements TransactionRepository.
+func (t *TransacationRepositoryImpl) GetAll() ([]models.TransactionResponse, error) {
+	var transaction []models.TransactionResponse
+	err := database.DB.Find(&transaction).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return transaction, nil
+}
+
+
 // Create implements TransactionRepository.
 func (t *TransacationRepositoryImpl) Create(transaction *models.Transaction) error {
 	err := database.DB.Create(transaction).Error
@@ -21,4 +33,3 @@ func (t *TransacationRepositoryImpl) Create(transaction *models.Transaction) err
 
 	return err
 }
-
